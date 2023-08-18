@@ -22,12 +22,21 @@ const scrapeLogic = async (res) => {
     // Set screen size
     await page.setViewport({ width: 1080, height: 1024 });
 
-    // Take a screenshot of the page
-    await page.screenshot({ path: "screenshot.png" });
-  
-    const logStatement = `Screenshot saved as screenshot.png`;
-    console.log(logStatement);
-    res.send(logStatement);
+   // Take a screenshot and convert to base64
+   const screenshotBuffer = await page.screenshot();
+   const screenshotBase64 = screenshotBuffer.toString("base64");
+
+   // Create an HTML response with the screenshot image
+   const htmlResponse = `
+     <html>
+     <body>
+       <h1>Screenshot</h1>
+       <img src="data:image/png;base64,${screenshotBase64}" />
+     </body>
+     </html>
+   `;
+    
+    res.send(htmlResponse);
   } catch (e) {
     console.error(e);
     res.send(`Something went wrong while running Puppeteer: ${e}`);
