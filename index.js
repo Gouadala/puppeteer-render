@@ -1,5 +1,5 @@
 const express = require("express");
-const { scrapeLogic, checker } = require("./scrapeLogic"); 
+const { scrapeLogic, checker,captureScreenshot } = require("./scrapeLogic"); 
 const app = express();
 
 const PORT = process.env.PORT || 4000;
@@ -22,6 +22,25 @@ app.post("/check", async (req, res) => {
   }
 });
 
+app.post("/capture", async (req, res) => {
+  const { url } = req.body;
+
+  try {
+    const screenshotData = await captureScreenshot(url);
+    const htmlResponse = `
+      <html>
+      <body>
+        <h1>Screenshot</h1>
+        <img src="data:image/png;base64,${screenshotData}" />
+      </body>
+      </html>
+    `;
+    res.send(htmlResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while capturing the screenshot.' });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Render Puppeteer server is up and running!");
