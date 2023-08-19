@@ -1,14 +1,14 @@
 const express = require("express");
-const { scrapeLogic } = require("./scrapeLogic");
-const { checker } = require("./checker");
+const { scrapeLogic, checker } = require("./scrapeLogic"); 
 const app = express();
 
 const PORT = process.env.PORT || 4000;
+// Add the body parsing middleware here
+app.use(express.json());
 
 app.get("/scrape", (req, res) => {
   scrapeLogic(res);
 });
-
 
 app.post("/check", async (req, res) => {
   const { email, password } = req.body;
