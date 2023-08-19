@@ -8,6 +8,13 @@ app.get("/scrape", (req, res) => {
   scrapeLogic(res);
 });
 
+app.post("/check", async (req, res) => {
+  const { email, password } = req.body;
+   checker(email, password);
+   const result = await checker(email, password);
+   res.json({ result });
+});
+
 app.get("/", (req, res) => {
   res.send("Render Puppeteer server is up and running!");
 });
