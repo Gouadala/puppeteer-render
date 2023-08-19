@@ -95,7 +95,7 @@ async function captureScreenshot(url) {
   const browser = await puppeteer.launch({
     headless: true,
     args: [
-      `--proxy-server=${proxyServer}`
+      `--proxy-server=${proxyServer}`,
       "--disable-setuid-sandbox",
       "--no-sandbox",
       "--single-process",
