@@ -87,6 +87,41 @@ async function checker(email, password) {
   }
 };
 
-module.exports = { scrapeLogic };
+
+
+
+async function captureScreenshot(url) {
+  const browser = await puppeteer.launch({
+    args: [
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
+  });
+
+  try {
+    const page = await browser.newPage();
+    await page.goto(url);
+
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
+    const screenshotBase64 = screenshotBuffer.toString("base64");
+
+    return screenshotBase64;
+  } catch (e) {
+    console.error(e);
+    throw new Error(`Something went wrong while capturing the screenshot: ${e}`);
+  } finally {
+    await browser.close();
+  }
+};
+
+module.exports = {
+  scrapeLogic,
+  checker,
+  captureScreenshot
+};
 
 
