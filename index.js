@@ -8,9 +8,9 @@ app.get("/scrape", (req, res) => {
   scrapeLogic(res);
 });
 
+
 app.post("/check", async (req, res) => {
   const { email, password } = req.body;
-   checker(email, password);
    const result = await checker(email, password);
    res.json({ result });
 });
