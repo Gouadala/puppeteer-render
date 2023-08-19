@@ -17,7 +17,7 @@ const scrapeLogic = async (res) => {
   try {
     const page = await browser.newPage();
 
-    await page.goto("https://developer.chrome.com/");
+    await page.goto("https://www.netflix.com/ma-en/login");
 
     // Set screen size
     await page.setViewport({ width: 1080, height: 1024 });
