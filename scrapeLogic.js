@@ -55,9 +55,7 @@ async function checker(email, password) {
       "--no-zygote",
     ],
     executablePath:
-      process.env.NODE_ENV === "production"
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : puppeteer.executablePath(),
+      process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
   });
 
   try {
@@ -66,27 +64,19 @@ async function checker(email, password) {
     await page.goto("https://www.netflix.com/ma-en/login");
     await page.type('input[data-uia="login-field"]', email);
     await page.type('input[data-uia="password-field"]', password);
-
     await page.click('button[data-uia="login-submit-button"]');
 
-    // Wait for potential error messages to appear
-    const errorMessageSelector = 'div[data-uia="text"]';
-    const loginButtonSelector = 'button[data-uia="login-submit-button"]';
-    
     await Promise.race([
-      page.waitForSelector(errorMessageSelector),
-      page.waitForSelector(loginButtonSelector) // Wait for login button in case login is successful
+      page.waitForSelector('div[data-uia="text"]'),
+      page.waitForSelector('button[data-uia="login-submit-button"]')
     ]);
 
-    // Check if an error message element exists
-    const errorMessageElement = await page.$(errorMessageSelector);
+    const errorMessageElement = await page.$('div[data-uia="text"]');
 
     if (errorMessageElement) {
       const errorMessage = await errorMessageElement.evaluate(message => message.textContent);
-      console.log(`Login failed: ${errorMessage}`);
       return `Login failed: ${errorMessage}`;
     } else {
-      console.log("Login successful.");
       return "Login successful.";
     }
   } catch (e) {
@@ -95,7 +85,7 @@ async function checker(email, password) {
   } finally {
     await browser.close();
   }
-}
+};
 
 module.exports = { scrapeLogic };
 
