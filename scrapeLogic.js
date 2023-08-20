@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+
 require("dotenv").config();
 
 const scrapeLogic = async (res) => {
@@ -91,11 +92,11 @@ async function checker(email, password) {
 
 
 async function captureScreenshot(url) {
-  const proxyServer = 'https://72.195.34.35:27360';
+  
   const browser = await puppeteer.launch({
     headless: true,
     args: [
-      `--proxy-server=${proxyServer}`,
+     
       "--disable-setuid-sandbox",
       "--no-sandbox",
       "--single-process",
